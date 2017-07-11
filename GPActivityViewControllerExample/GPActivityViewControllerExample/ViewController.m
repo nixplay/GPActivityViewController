@@ -14,18 +14,30 @@
 
 - (IBAction)shareAction:(id)sender {
     // DO NOT forget to  setup application IDs in info.plist. For more info see README.md
-    GPFacebookActivity *facebookActivity = [GPFacebookActivity new];
-    GPTwitterActivity *twitterActivity = [GPTwitterActivity new];
+//    GPFacebookActivity *facebookActivity = [GPFacebookActivity new];
+//    GPTwitterActivity *twitterActivity = [GPTwitterActivity new];
     GPCopyActivity *copyActivity = [GPCopyActivity new];
-    GPMailActivity *mailActivity = [GPMailActivity new];
-    GPMessageActivity *messageActivity = [GPMessageActivity new];
-    GPOKActivity *okActivity = [GPOKActivity new];
-    GPVKActivity *vkActivity = [GPVKActivity new];
-    GPSafariActivity *safariActivity = [GPSafariActivity new];
-    GPMapsActivity *mapsActivity = [GPMapsActivity new];
-    GPPhotoActivity *photoActivity = [GPPhotoActivity new];
+//    GPMailActivity *mailActivity = [GPMailActivity new];
+//    GPMessageActivity *messageActivity = [GPMessageActivity new];
+//    GPOKActivity *okActivity = [GPOKActivity new];
+//    GPVKActivity *vkActivity = [GPVKActivity new];
+//    GPSafariActivity *safariActivity = [GPSafariActivity new];
+//    GPMapsActivity *mapsActivity = [GPMapsActivity new];
+//    GPPhotoActivity *photoActivity = [GPPhotoActivity new];
 
-    NSArray *activities = @[mailActivity, messageActivity, safariActivity, mapsActivity, facebookActivity, twitterActivity, vkActivity, okActivity, photoActivity, copyActivity];
+//    NSArray *activities = @[mailActivity, messageActivity, safariActivity, mapsActivity, facebookActivity, twitterActivity, vkActivity, okActivity, photoActivity, copyActivity];
+    NSMutableArray *activities = [NSMutableArray arrayWithArray:@[copyActivity,[GPOKActivity new] ]];
+    for(int i = 0 ;i < 3; i ++){
+        GPActivity* activity = [GPActivity customActivity:NSLocalizedStringFromTable(@"ACTIVITY_COPY", @"GPActivityViewController", @"Custom") actionHandler:^(GPActivity *activity, NSDictionary *userInfo) {
+            NSLog(@"Activity done: %@", activity);
+        }];
+        activity.title = NSLocalizedStringFromTable(@"ACTIVITY_COPY", @"GPActivityViewController", @"Custom");
+        NSString *imageName = @"GPActivityViewController.bundle/shareCustom";
+        activity.image = [UIImage imageNamed:imageName];
+         
+        [activities addObject:activity];
+    }
+    
     GPActivityViewController *controller = [[GPActivityViewController alloc] initWithActivities:activities completion:^(NSString *activityType, BOOL completed) {
         if (completed) {
             if (activityType) {
