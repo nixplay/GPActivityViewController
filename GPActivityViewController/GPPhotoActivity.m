@@ -29,7 +29,7 @@ NSString *const kGPActivityPhoto = @"GPPhotoActivity";
 - (id)init {
     self = [super init];
     if (self) {
-        self.title = NSLocalizedStringFromTable(@"ACTIVITY_PHOTO", @"GPActivityViewController", @"Save to Camera Roll");
+        self.title = NSLocalizedStringFromTableInBundle(@"ACTIVITY_PHOTO", @"GPActivityViewController",  [NSBundle bundleForClass:GPActivityViewController.class], @"Save to Camera Roll");
         NSString *imageName = @"GPActivityViewController.bundle/sharePhotos";
         self.image = [UIImage imageNamed:imageName];
     }

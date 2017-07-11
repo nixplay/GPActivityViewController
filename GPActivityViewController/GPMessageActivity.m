@@ -33,7 +33,7 @@ NSString *const GPActivityMessage = @"GPActivityMessage";
 - (id)init {
     self = [super init];
     if (self) {
-        self.title = NSLocalizedStringFromTable(@"ACTIVITY_MESSAGE", @"GPActivityViewController", @"Message");
+        self.title = NSLocalizedStringFromTableInBundle(@"ACTIVITY_MESSAGE", @"GPActivityViewController",  [NSBundle bundleForClass:GPActivityViewController.class], @"Message");
         NSString *imageName = @"GPActivityViewController.bundle/shareMessage";
         self.image = [UIImage imageNamed:imageName];
     }
