@@ -42,27 +42,27 @@
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
             self.backgroundColor = [UIColor colorWithWhite:244/255.f alpha:1.f];
 
-            _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            _cancelButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
-            [_cancelButton setTitle:NSLocalizedStringFromTableInBundle(@"BUTTON_CANCEL", @"GPActivityViewController",  [NSBundle bundleForClass:GPActivityViewController.class], @"Cancel") forState:UIControlStateNormal];
-
-            UIColor *titleColor = [UIColor colorWithRed:22/255.f green:126/255.f
-                                                   blue:251/255.f alpha:1.0f];
-            [_cancelButton setTitleColor:titleColor forState:UIControlStateNormal];
-            [_cancelButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-            [_cancelButton.titleLabel setFont:[UIFont systemFontOfSize:21]];
-
-
-            NSUInteger width = 270;
-            NSUInteger height = 45;
-            _cancelButton.frame = CGRectMake((CGRectGetWidth(self.frame) - width) / 2,
-                                             CGRectGetHeight(self.frame) - height - 15,
-                                             width, height);
-
-            [_cancelButton addTarget:self action:@selector(cancelButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-            [self addSubview:_cancelButton];
+//            _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//            _cancelButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+//            [_cancelButton setTitle:NSLocalizedStringFromTableInBundle(@"BUTTON_CANCEL", @"GPActivityViewController",  [NSBundle bundleForClass:GPActivityViewController.class], @"Cancel") forState:UIControlStateNormal];
+//
+//            UIColor *titleColor = [UIColor colorWithRed:22/255.f green:126/255.f
+//                                                   blue:251/255.f alpha:1.0f];
+//            [_cancelButton setTitleColor:titleColor forState:UIControlStateNormal];
+//            [_cancelButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+//            [_cancelButton.titleLabel setFont:[UIFont systemFontOfSize:21]];
+//
+//
+//            NSUInteger width = 270;
+//            NSUInteger height = 45;
+//            _cancelButton.frame = CGRectMake((CGRectGetWidth(self.frame) - width) / 2,
+//                                             CGRectGetHeight(self.frame) - height - 15,
+//                                             width, height);
+//
+//            [_cancelButton addTarget:self action:@selector(cancelButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+//            [self addSubview:_cancelButton];
             
-            cancelButtonHeight = height + 15;
+//            cancelButtonHeight = height + 15;
         }
     
         
@@ -132,8 +132,8 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    NSUInteger columnsInRow = CGRectGetWidth(self.scrollView.frame) / 100;
-    NSUInteger rowsInPage = CGRectGetHeight(self.scrollView.frame) / 100;
+    NSUInteger columnsInRow = 3;//CGRectGetWidth(self.scrollView.frame) / 100;
+    NSUInteger rowsInPage = 1;//CGRectGetHeight(self.scrollView.frame) / 100;
     
     if (columnsInRow == 0 || rowsInPage == 0)
         return;

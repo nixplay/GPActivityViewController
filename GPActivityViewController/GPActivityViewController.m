@@ -28,7 +28,7 @@
 - (void)prepareForActivityInfo:(NSDictionary *)activityInfo;
 @end
 
-@interface GPActivityViewController () <ActivityViewActionDelegate, UIPopoverControllerDelegate> {
+@interface GPActivityViewController () <ActivityViewActionDelegate, UIPopoverControllerDelegate,UIGestureRecognizerDelegate> {
     ActivityViewCompletionHandler _completionHandler;
 }
 
@@ -48,7 +48,9 @@
     self = [super init];
     if (self) {
         _completionHandler = completionHandler;
-
+        UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapGestureRecognizerHandler:)];
+        [tap setDelegate: self];
+        [self.view addGestureRecognizer:tap];
         NSUInteger positionY = 0;
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
             _backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
@@ -80,6 +82,17 @@
         self.contentSizeForViewInPopover = CGSizeMake(320, size.height);
     }
     return self;
+}
+#pragma mark -
+
+-(void)tapGestureRecognizerHandler:(UITapGestureRecognizer*)sender{
+    NSLog(@"touches began");
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    if (_completionHandler)
+        _completionHandler(nil, NO);
+    
 }
 
 #pragma mark -
