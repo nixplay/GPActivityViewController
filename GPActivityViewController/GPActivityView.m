@@ -122,7 +122,7 @@
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _buttonWidth, BUTTON_WIDTH)];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    float width = BUTTON_WIDTH*0.6;
+    float width = BUTTON_WIDTH*0.6  ;
     float x = (_buttonWidth-width)*0.5;
     
     button.frame = CGRectMake(x, 0, width, width);
