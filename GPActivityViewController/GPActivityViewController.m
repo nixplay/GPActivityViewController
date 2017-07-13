@@ -61,7 +61,7 @@
 
             positionY = self.view.frame.size.height;
         } else {
-            self.view.frame = CGRectMake(0, 0, 320, 480);
+            self.view.frame = CGRectMake(0, 0, 320, 400);
         }
 
         _activities = activities;
@@ -70,6 +70,7 @@
         _activityView = [[GPActivityView alloc] initWithFrame:CGRectMake(0, positionY, CGRectGetWidth(frame),
                                                                          CGRectGetHeight(frame))
                                                    activities:activities];
+        
         _activityView.delegate = self;
 
 
