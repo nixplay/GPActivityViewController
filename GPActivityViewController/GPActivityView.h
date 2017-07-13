@@ -28,7 +28,6 @@
 @required
 - (void)cancelButtonTapped;
 - (void)activityTappedAtIndex:(NSUInteger)index;
-
 @end
 
 
@@ -38,6 +37,8 @@
 
 @property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) UIButton *cancelButton;
+@property (strong, nonatomic) NSString *title;
+@property (assign) NSInteger buttonWidth;
 
 - (id)initWithFrame:(CGRect)frame activities:(NSArray *)activities;
 

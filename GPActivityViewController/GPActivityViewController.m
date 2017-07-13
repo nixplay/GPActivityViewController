@@ -83,6 +83,10 @@
     }
     return self;
 }
+
+-(void) setTitle:(NSString*) title{
+    [_activityView setTitle:title];
+}
 #pragma mark -
 
 -(void)tapGestureRecognizerHandler:(UITapGestureRecognizer*)sender{

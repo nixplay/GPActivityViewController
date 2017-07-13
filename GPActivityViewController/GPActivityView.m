@@ -22,10 +22,11 @@
 
 #import "GPActivityView.h"
 #import "GPActivityViewController.h"
-
+#define BUTTON_WIDTH 100
 @interface GPActivityView () <UIScrollViewDelegate> {
     NSMutableArray *_activityViews;
     UIPageControl *_pageControl;
+    UILabel *_label;
 }
 
 @end
@@ -35,6 +36,7 @@
 - (id)initWithFrame:(CGRect)frame activities:(NSArray *)activities {
     self = [super initWithFrame:frame];
     if (self) {
+        
         _activityViews = [NSMutableArray arrayWithCapacity:activities.count];
         self.clipsToBounds = YES;
         NSUInteger cancelButtonHeight = 0;
@@ -53,8 +55,8 @@
 //            [_cancelButton.titleLabel setFont:[UIFont systemFontOfSize:21]];
 //
 //
-//            NSUInteger width = 270;
-//            NSUInteger height = 45;
+            NSUInteger width = 270;
+            NSUInteger height = 45;
 //            _cancelButton.frame = CGRectMake((CGRectGetWidth(self.frame) - width) / 2,
 //                                             CGRectGetHeight(self.frame) - height - 15,
 //                                             width, height);
@@ -63,11 +65,24 @@
 //            [self addSubview:_cancelButton];
             
 //            cancelButtonHeight = height + 15;
+            
+            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake((CGRectGetWidth(self.frame) - width) / 2,
+                                                                      0,
+                                                                      width, height)];
+            [label setTextColor:[UIColor lightGrayColor]];
+            label.textAlignment = NSTextAlignmentCenter;
+            [label setText:@"Title"];
+            _label = label;
+            [self addSubview:label];
         }
     
         
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 34, frame.size.width,
-                                                                     self.frame.size.height - 34 - cancelButtonHeight)];
+        
+        _buttonWidth = fmax(BUTTON_WIDTH,frame.size.width/[activities count]);
+        
+        
+        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, frame.size.width,
+                                                                     self.frame.size.height)];
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.delegate = self;
@@ -78,6 +93,7 @@
         NSInteger index = 0;
         for (GPActivity *activity in activities) {
             UIView *view = [self viewForActivity:activity index:index++];
+            
             [_scrollView addSubview:view];
             [_activityViews addObject:view];
         }        
@@ -99,18 +115,24 @@
     return self;
 }
 
+-(void) setTitle:(NSString *)title{
+    [_label setText:title];
+}
 - (UIView *)viewForActivity:(GPActivity *)activity index:(NSInteger)index {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _buttonWidth, BUTTON_WIDTH)];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(10, 0, 59, 59);
+    float width = BUTTON_WIDTH*0.4;
+    float x = (_buttonWidth-width)*0.5;
+    
+    button.frame = CGRectMake(x, 0, width, width);
     button.tag = index;
     [button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [button setBackgroundImage:activity.image forState:UIControlStateNormal];
     button.accessibilityLabel = activity.title;
     [view addSubview:button];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 59, 100, 30)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(x, width, _buttonWidth, 30)];
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = [UIColor clearColor];
     label.textColor = [UIColor blackColor];
@@ -132,13 +154,13 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    NSUInteger columnsInRow = 3;//CGRectGetWidth(self.scrollView.frame) / 100;
-    NSUInteger rowsInPage = 1;//CGRectGetHeight(self.scrollView.frame) / 100;
+    NSUInteger columnsInRow = CGRectGetWidth(self.scrollView.frame) / _buttonWidth;
+    NSUInteger rowsInPage = CGRectGetHeight(self.scrollView.frame) / BUTTON_WIDTH;
     
     if (columnsInRow == 0 || rowsInPage == 0)
         return;
     
-    NSUInteger offset = (CGRectGetWidth(self.scrollView.frame) - columnsInRow * 100 + 20) / 2;
+    NSUInteger offset = (CGRectGetWidth(self.scrollView.frame) - columnsInRow * _buttonWidth  ) / 2;
     
     NSUInteger page = 0;
     NSUInteger column = 0;
@@ -150,8 +172,8 @@
         page = index / (columnsInRow * rowsInPage);
         
         UIView *view = [_activityViews objectAtIndex:index];
-        view.frame = CGRectMake(offset + 100 * column +  page * _scrollView.frame.size.width,
-                                100 * row, 80, 80);
+        float x = offset + _buttonWidth * column +  page * _scrollView.frame.size.width;
+        view.frame = CGRectMake(x , BUTTON_WIDTH * row, BUTTON_WIDTH, BUTTON_WIDTH);
         
     }
     
@@ -170,8 +192,8 @@
     NSUInteger minimumSize = CGRectGetHeight(_cancelButton.frame) + topOffset + bottomOffset +
                               CGRectGetHeight(_pageControl.frame);
     
-    NSUInteger columnsInRow = size.width / 100;
-    NSUInteger rowsInPage = (size.height - minimumSize) / 100;
+    NSUInteger columnsInRow = size.width / _buttonWidth;
+    NSUInteger rowsInPage = (size.height - minimumSize) / _buttonWidth;
     NSUInteger rows = _activityViews.count / columnsInRow;
     
     if (_activityViews.count % columnsInRow != 0) {
@@ -180,7 +202,7 @@
     
     rows = (rows > rowsInPage)? rowsInPage: rows;
         
-    return CGSizeMake(size.width,  100 * rows + minimumSize);
+    return CGSizeMake(size.width,  BUTTON_WIDTH * rows + minimumSize);
 }
 
 #pragma mark - ActivityViewActionDelegate
