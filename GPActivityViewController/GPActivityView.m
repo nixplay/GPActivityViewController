@@ -45,7 +45,7 @@
         NSUInteger cancelButtonHeight = 0;
         
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            self.backgroundColor = [UIColor colorWithWhite:244/255.f alpha:1.f];
+            self.backgroundColor = [UIColor colorWithWhite:244.0f/255.f alpha:1.f];
 
 //            _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
 //            _cancelButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
@@ -70,8 +70,9 @@
 //            cancelButtonHeight = height + 15;
             
             UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake((CGRectGetWidth(self.frame) - width) / 2,
-                                                                      0,
+                                                                      5,
                                                                       width, height)];
+            [label setFont:[UIFont systemFontOfSize:16]];
             [label setTextColor:TITLE_GRAY_COLOR];
             label.textAlignment = NSTextAlignmentCenter;
             [label setText:@"Title"];
@@ -125,7 +126,7 @@
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _buttonWidth, BUTTON_WIDTH)];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    float width = BUTTON_WIDTH*0.5  ;
+    float width = BUTTON_WIDTH*0.4  ;
     float x = (_buttonWidth-width)*0.5;
     
     button.frame = CGRectMake(x, 0, width, width);
@@ -135,7 +136,7 @@
     button.accessibilityLabel = activity.title;
     [view addSubview:button];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(x, width, _buttonWidth+2, 30)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(x, width+5, _buttonWidth, 30)];
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = [UIColor clearColor];
     label.textColor = TITLE_GRAY_COLOR;
