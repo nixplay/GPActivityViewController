@@ -23,6 +23,9 @@
 #import "GPActivityView.h"
 #import "GPActivityViewController.h"
 #define BUTTON_WIDTH 100
+#define BRIGHTNESS 74.0f/255.0f
+#define TITLE_GRAY_COLOR [UIColor colorWithRed:BRIGHTNESS green:BRIGHTNESS blue:BRIGHTNESS alpha:1.0]
+
 @interface GPActivityView () <UIScrollViewDelegate> {
     NSMutableArray *_activityViews;
     UIPageControl *_pageControl;
@@ -69,7 +72,7 @@
             UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake((CGRectGetWidth(self.frame) - width) / 2,
                                                                       0,
                                                                       width, height)];
-            [label setTextColor:[UIColor lightGrayColor]];
+            [label setTextColor:TITLE_GRAY_COLOR];
             label.textAlignment = NSTextAlignmentCenter;
             [label setText:@"Title"];
             _label = label;
@@ -122,7 +125,7 @@
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _buttonWidth, BUTTON_WIDTH)];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    float width = BUTTON_WIDTH*0.6  ;
+    float width = BUTTON_WIDTH*0.5  ;
     float x = (_buttonWidth-width)*0.5;
     
     button.frame = CGRectMake(x, 0, width, width);
@@ -132,11 +135,11 @@
     button.accessibilityLabel = activity.title;
     [view addSubview:button];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(x, width, _buttonWidth, 30)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(x, width, _buttonWidth+2, 30)];
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = [UIColor clearColor];
-    label.textColor = [UIColor blackColor];
-    label.font = [UIFont systemFontOfSize:12];
+    label.textColor = TITLE_GRAY_COLOR;
+    label.font = [UIFont systemFontOfSize:16];
 
     label.text = activity.title;
 
