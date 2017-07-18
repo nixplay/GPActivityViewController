@@ -154,7 +154,7 @@
     typeof(self) __weak weakSelf = self;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [UIView animateWithDuration:0.4 animations:^{
-            weakSelf.backgroundView.alpha = 0.4;
+            weakSelf.backgroundView.alpha = 0.7;
             
             CGRect frame = weakSelf.activityView.frame;
             NSUInteger height = UIInterfaceOrientationIsLandscape(weakSelf.interfaceOrientation)? CGRectGetWidth(weakSelf.view.frame):CGRectGetHeight(weakSelf.view.frame);
@@ -175,7 +175,7 @@
     typeof(self) __weak weakSelf = self;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [UIView animateWithDuration:0.4 animations:^{
-            weakSelf.backgroundView.alpha = 0.54;
+            weakSelf.backgroundView.alpha = 0.7;
             
             CGRect frame = weakSelf.activityView.frame;
             NSUInteger height = UIInterfaceOrientationIsLandscape(weakSelf.interfaceOrientation)?CGRectGetWidth(weakSelf.view.frame):CGRectGetHeight(weakSelf.view.frame);
