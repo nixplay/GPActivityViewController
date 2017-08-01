@@ -50,13 +50,14 @@
         _completionHandler = completionHandler;
         UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapGestureRecognizerHandler:)];
         [tap setDelegate: self];
-        [self.view addGestureRecognizer:tap];
+        
         NSUInteger positionY = 0;
 //        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
             _backgroundView = [[UIView alloc] initWithFrame:self.view.bounds];
             _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
             _backgroundView.backgroundColor = [UIColor blackColor];
             _backgroundView.alpha = 0;
+            [_backgroundView addGestureRecognizer:tap];
             [self.view addSubview:_backgroundView];
 
             positionY = self.view.frame.size.height;

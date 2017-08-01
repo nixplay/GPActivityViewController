@@ -177,7 +177,7 @@
         
         UIView *view = [_activityViews objectAtIndex:index];
         float x = offset + _buttonWidth * column +  page * _scrollView.frame.size.width;
-        view.frame = CGRectMake(x , BUTTON_WIDTH * row, BUTTON_WIDTH, BUTTON_WIDTH);
+        view.frame = CGRectMake(x , BUTTON_WIDTH * row, _buttonWidth, BUTTON_WIDTH);
         
     }
     
