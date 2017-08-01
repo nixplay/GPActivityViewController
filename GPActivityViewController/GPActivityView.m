@@ -44,7 +44,7 @@
         self.clipsToBounds = YES;
         NSUInteger cancelButtonHeight = 0;
         
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+//        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
             self.backgroundColor = [UIColor colorWithWhite:244.0f/255.f alpha:1.f];
 
 //            _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -78,9 +78,9 @@
             [label setText:@"Title"];
             _label = label;
             [self addSubview:label];
-        }
+//        }
     
-        
+    
         
         _buttonWidth = fmax(BUTTON_WIDTH,frame.size.width/[activities count]);
         
