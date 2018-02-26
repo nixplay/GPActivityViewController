@@ -169,6 +169,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Gleb Pinigin";
+				TargetAttributes = {
+					A762DB351737726900F51D94 = {
+						DevelopmentTeam = FLA95J3G7U;
+					};
+				};
 			};
 			buildConfigurationList = A762DB311737726900F51D94 /* Build configuration list for PBXProject "GPActivityViewControllerExample" */;
 			compatibilityVersion = "Xcode 6.3";
@@ -366,10 +371,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2C9F9BE9E1359B7689AABBD4 /* Pods-GPActivityViewControllerExample.debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = FLA95J3G7U;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GPActivityViewControllerExample/GPActivityViewControllerExample-Prefix.pch";
 				INFOPLIST_FILE = "GPActivityViewControllerExample/GPActivityViewControllerExample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -379,10 +385,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 745A5B7D02D7FA85205AE05B /* Pods-GPActivityViewControllerExample.release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = FLA95J3G7U;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GPActivityViewControllerExample/GPActivityViewControllerExample-Prefix.pch";
 				INFOPLIST_FILE = "GPActivityViewControllerExample/GPActivityViewControllerExample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

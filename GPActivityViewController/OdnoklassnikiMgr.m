@@ -225,30 +225,41 @@ NSString *const kOKTokenKey = @"kOKTokenKey:info";
 	[params setValue:_secretKey forKey:@"client_secret"];
     
     NSURL *baseURL = [NSURL URLWithString:kOKAccessTokenURL];
-    NSURL *tokenRequestURL = [baseURL serializeURLWithParams:params];
-    NSMutableURLRequest *tokenRequest = [NSMutableURLRequest requestWithURL:baseURL];
-    [tokenRequest setHTTPMethod:@"POST"];
-    [tokenRequest addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+//    NSURL *tokenRequestURL = [baseURL serializeURLWithParams:params];
+//    NSMutableURLRequest *tokenRequest = [NSMutableURLRequest requestWithURL:baseURL];
+//    [tokenRequest setHTTPMethod:@"POST"];
+//    [tokenRequest addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     
-    NSString *body = [tokenRequestURL query];
-    [tokenRequest setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];
+//    NSString *body = [tokenRequestURL query];
+//    [tokenRequest setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];
     
     typeof(self) __weak weakSelf = self;
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:tokenRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        [weakSelf setAccessToken:[JSON objectForKey:@"access_token"]];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager POST:[baseURL absoluteString] parameters:params
+         progress:^(NSProgress * _Nonnull downloadProgress) {
+             
+         } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             [weakSelf setAccessToken:[responseObject objectForKey:@"access_token"]];
+             
+             if (completion) {
+                 completion();
+             }
+             
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+             if (completion) {
+                 completion();
+             }
+             
+             [self debugOut:@"%@", error];
+         }];
+//    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:tokenRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+    
         
-        if (completion) {
-            completion();
-        }
-        
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        if (completion) {
-            completion();
-        }
-        
-        [self debugOut:@"%@", error];
-    }];
-    [operation start];
+//    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//
+//    }];
+//    [operation start];
 }
 
 - (void)continueRetrievingAccessToken:(NSString *)code {
@@ -262,32 +273,54 @@ NSString *const kOKTokenKey = @"kOKTokenKey:info";
     [params setObject:_secretKey forKey:@"client_secret"];
     
     NSURL *baseURL = [NSURL URLWithString:kOKAccessTokenURL];
-    NSURL *tokenRequestURL = [baseURL serializeURLWithParams:params];
-    NSMutableURLRequest *tokenRequest = [NSMutableURLRequest requestWithURL:baseURL];
-    [tokenRequest setHTTPMethod:@"POST"];
-    [tokenRequest addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+//    NSURL *tokenRequestURL = [baseURL serializeURLWithParams:params];
+//    NSMutableURLRequest *tokenRequest = [NSMutableURLRequest requestWithURL:baseURL];
+//    [tokenRequest setHTTPMethod:@"POST"];
+//    [tokenRequest addValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
 
-    NSString *body = [tokenRequestURL query];
-    [tokenRequest setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];
+//    NSString *body = [tokenRequestURL query];
+//    [tokenRequest setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];
     
     typeof(self) __weak weakSelf = self;
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:tokenRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        [weakSelf setAccessToken:[JSON objectForKey:@"access_token"]];
-        [weakSelf setRefreshToken:[JSON objectForKey:@"refresh_token"]];
-        [weakSelf setTokenType:[JSON objectForKey:@"token_type"]];
-
-        if (weakSelf.completionBlock) {
-            weakSelf.completionBlock();
-        }
-        
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        if (weakSelf.completionBlock) {
-            weakSelf.completionBlock();
-        }
-
-        [self debugOut:@"%@", error];
-    }];
-    [operation start];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager POST:[baseURL absoluteString]
+       parameters:params
+         progress:^(NSProgress * _Nonnull downloadProgress) {
+         }success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+             [weakSelf setAccessToken:[responseObject objectForKey:@"access_token"]];
+             [weakSelf setRefreshToken:[responseObject objectForKey:@"refresh_token"]];
+             [weakSelf setTokenType:[responseObject objectForKey:@"token_type"]];
+             
+             if (weakSelf.completionBlock) {
+                 weakSelf.completionBlock();
+             }
+             
+         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+             if (weakSelf.completionBlock) {
+                 weakSelf.completionBlock();
+             }
+             
+             [self debugOut:@"%@", error];
+             
+         }];
+//    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:tokenRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//        [weakSelf setAccessToken:[JSON objectForKey:@"access_token"]];
+//        [weakSelf setRefreshToken:[JSON objectForKey:@"refresh_token"]];
+//        [weakSelf setTokenType:[JSON objectForKey:@"token_type"]];
+//
+//        if (weakSelf.completionBlock) {
+//            weakSelf.completionBlock();
+//        }
+//
+//    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//        if (weakSelf.completionBlock) {
+//            weakSelf.completionBlock();
+//        }
+//
+//        [self debugOut:@"%@", error];
+//    }];
+//    [operation start];
 }
 
 #pragma mark - share
@@ -304,25 +337,42 @@ NSString *const kOKTokenKey = @"kOKTokenKey:info";
     [params setObject:signature forKey:@"sig"];
     [params setObject:[self accessToken] forKey:@"access_token"];
     
-    NSURL *requestURL = [[NSURL URLWithString:kOKAPIEntryPointURL] serializeURLWithParams:params];    
-    NSMutableURLRequest *shareRequest = [NSMutableURLRequest requestWithURL:requestURL];
+//    NSURL *requestURL = [[NSURL URLWithString:kOKAPIEntryPointURL] serializeURLWithParams:params];
+//    NSMutableURLRequest *shareRequest = [NSMutableURLRequest requestWithURL:requestURL];
     
     typeof(self) __weak weakSelf = self;
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:shareRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager POST:kOKAPIEntryPointURL parameters:params progress:^(NSProgress * _Nonnull uploadProgress) {
         
-        int errorCode = [[JSON objectForKey:@"error_code"] integerValue];
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        int errorCode = [[responseObject objectForKey:@"error_code"] intValue];
         if (errorCode == 102) {
             [weakSelf renewAccessToken:^() {
                 [weakSelf shareURL:urlString description:description];
             }];
         }
-        
-        [self debugOut:@"%@", JSON];
-        
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+
+        [self debugOut:@"%@", responseObject];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         [self debugOut:@"%@", error];
     }];
-    [operation start];
+    
+//    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:shareRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//
+//        int errorCode = [[JSON objectForKey:@"error_code"] integerValue];
+//        if (errorCode == 102) {
+//            [weakSelf renewAccessToken:^() {
+//                [weakSelf shareURL:urlString description:description];
+//            }];
+//        }
+//
+//        [self debugOut:@"%@", JSON];
+//
+//    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//        [self debugOut:@"%@", error];
+//    }];
+//    [operation start];
 }
 
 @end

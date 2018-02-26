@@ -196,37 +196,73 @@ NSString *const kVKEntryPoint = @"https://api.vk.com/method/";
                              @"owner_id":self.userId};
     
     NSURL *requestURL = [[self requestURLWithMethod:@"photos.getWallUploadServer"] serializeURLWithParams:params];
-    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
-    
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager POST:[[self requestURLWithMethod:@"photos.getWallUploadServer"] absoluteString] parameters:params  progress:^(NSProgress * _Nonnull uploadProgress) {
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (success) {
-            success([[JSON objectForKey:@"response"] objectForKey:@"upload_url"]);
+            success([[responseObject objectForKey:@"response"] objectForKey:@"upload_url"]);
         }
-    } failure:nil];
-    [operation start];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+    }];
+//    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//        if (success) {
+//            success([[JSON objectForKey:@"response"] objectForKey:@"upload_url"]);
+//        }
+//    } failure:nil];
+//    [operation start];
 }
 
 - (void)uploadImage:(UIImage *)image toURL:(NSString *)urlString success:(void (^)(NSString *hash, NSString *photo, NSString *server))success {
     
     NSURL *url = [NSURL URLWithString:urlString];
-    AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
+//    AFHTTPClient *httpClient = [[AFHTTPClient alloc] initWithBaseURL:url];
     NSData *imageData = UIImageJPEGRepresentation(image, 0.75f);
-    NSMutableURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST" path:@"" parameters:nil
-                                                    constructingBodyWithBlock:^(id <AFMultipartFormData>formData) {
-                                                        [formData appendPartWithFileData:imageData name:@"photo" fileName:@"photo.jpg" mimeType:@"image/jpg"];
-                                                    }];
-    
+//    NSMutableURLRequest *request = [httpClient multipartFormRequestWithMethod:@"POST" path:@"" parameters:nil
+//                                                    constructingBodyWithBlock:^(id <AFMultipartFormData>formData) {
+//                                                        [formData appendPartWithFileData:imageData name:@"photo" fileName:@"photo.jpg" mimeType:@"image/jpg"];
+//                                                    }];
+//
     void (^parseJSON)(id JSON) = ^(id JSON){
         if (success)
             success([JSON objectForKey:@"hash"], [JSON objectForKey:@"photo"], [JSON objectForKey:@"server"]);
     };
+//
+//    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//        parseJSON(JSON);
+//    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+//        parseJSON(JSON);
+//    }];
+//    [operation start];
     
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        parseJSON(JSON);
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        parseJSON(JSON);
-    }];
-    [operation start];
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:url.absoluteString parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFormData:imageData name:@"file"];
+    } error:nil];
+    
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+    NSURLSessionUploadTask * uploadTask = [manager
+                  uploadTaskWithStreamedRequest:request
+                  progress:^(NSProgress * _Nonnull uploadProgress) {
+                      // This is not called back on the main queue.
+                      // You are responsible for dispatching to the main queue for UI updates
+                      dispatch_async(dispatch_get_main_queue(), ^{
+                          //Update the progress view
+//                          [progressView setProgress:uploadProgress.fractionCompleted];
+                      });
+                  }
+                  completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+                      if (error) {
+                          parseJSON(responseObject);
+                      } else {
+                          parseJSON(responseObject);
+                      }
+                  }];
+    
+    [uploadTask resume];
 }
 
 - (void)saveImageToWallWithHash:(NSString *)hash photo:(NSString *)photo server:(NSString *)server success:(void (^)(NSString *wallPhotoId))success {
@@ -239,11 +275,11 @@ NSString *const kVKEntryPoint = @"https://api.vk.com/method/";
     NSURL *requestURL = [[self requestURLWithMethod:@"photos.saveWallPhoto"] serializeURLWithParams:params];
     NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
     
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        if (success)
-            success([[[JSON objectForKey:@"response"] objectAtIndex:0] objectForKey:@"id"]);
-    } failure:nil];
-    [operation start];
+//    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//        if (success)
+//            success([[[JSON objectForKey:@"response"] objectAtIndex:0] objectForKey:@"id"]);
+//    } failure:nil];
+//    [operation start];
 }
 
 - (void)shareOnWall:(NSString *)text photoId:(NSString *)wallPhotoId completion:(void (^)(void))completion {
@@ -259,11 +295,11 @@ NSString *const kVKEntryPoint = @"https://api.vk.com/method/";
     NSURL *requestURL = [[self requestURLWithMethod:@"wall.post"] serializeURLWithParams:params];
     NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];    
     
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        if (completion)
-            completion();
-    } failure:nil];
-    [operation start];
+//    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+//        if (completion)
+//            completion();
+//    } failure:nil];
+//    [operation start];
 }
 
 - (void)shareText:(NSString *)text image:(UIImage *)image {
